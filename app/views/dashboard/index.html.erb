@@ -1,0 +1,14 @@
+<h1>
+  <% if current_user %>
+    <%= "Trading Board for #{current_user.first_name} #{current_user.last_name}"  %>
+  <% else %>
+    Please <%=link_to "Sign In", new_auth_path %> to see your dashboard
+  <% end %>
+</h1>
+
+<% if current_user %>
+  <%= link_to "Sign Out", destroy_auth_path, method: :delete %>
+<% else %>
+  <%= link_to "Sign In", new_auth_path %>
+  <%=link_to "Sign Up", new_user_path %>
+<% end %>
