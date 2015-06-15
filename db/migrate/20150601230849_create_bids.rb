@@ -3,7 +3,7 @@ class CreateBids < ActiveRecord::Migration
     create_table :bids do |t|
       t.integer   :user_share_id
       t.integer   :shares
-      t.float     :price
+      t.float     :points
 
       t.timestamps
     end

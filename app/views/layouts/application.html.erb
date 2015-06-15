@@ -7,8 +7,36 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
-</body>
+  <nav class = "navbar navbar-default">
+    <div>
+      <ul class="nav navbar-nav">
+        <% if current_user %>
+          <li ><%= link_to "Sign Out", destroy_auth_path(session: session[:team_picks]), :class=>"sign_out", method: :delete, :data => {:confirm => 'Singing Out ! Are you sure?'} %></li>
+        <% else %>
+          <li><%= link_to "Sign In", new_auth_path %></li>
+          <li><%=link_to "Sign Up", new_user_path %></li>
+          <li><%=link_to "Sign In As Guest", {:controller => "dashboard", :action => "index", :signin => "guest"} %></li>
+        <% end %>
+      </ul>
+      <% if current_user %>
+      <ul class = "nav navbar-nav navbar-right " style="margin-right: 5%">
+          <li>
+            <%= link_to "Initial Team Purchases", new_user_share_path %>
+          </li>
+      </ul>
+      <ul class = "nav navbar-nav navbar-right " style="margin-right: 5%">
+        <li class="dashboard">
+          <%= link_to "Dashboard", root_path %>
+        </li>
+      </ul>
+      <% end %>
+    </div>
+  </nav>
+<div class="container">
+  <div class="flash_notice">
+    <%= flash[:notice] %>
+  </div>
+  <%= yield %>
+</div>
+</body class = "body">
 </html>

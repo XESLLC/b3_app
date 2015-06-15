@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601230858) do
+ActiveRecord::Schema.define(version: 20150614215142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20150601230858) do
   create_table "asks", force: :cascade do |t|
     t.integer  "user_share_id"
     t.integer  "shares"
-    t.float    "price"
+    t.float    "points"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20150601230858) do
   create_table "bids", force: :cascade do |t|
     t.integer  "user_share_id"
     t.integer  "shares"
-    t.float    "price"
+    t.float    "points"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20150601230858) do
     t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
   end
 
   create_table "trades", force: :cascade do |t|
@@ -68,6 +69,7 @@ ActiveRecord::Schema.define(version: 20150601230858) do
     t.float    "points_spent"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "last_session"
   end
 
 end

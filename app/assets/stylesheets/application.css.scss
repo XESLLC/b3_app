@@ -1,0 +1,93 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+
+ *= require_tree .
+ *= require_self
+ */
+
+ @import "bootstrap-sprockets";
+ @import "bootstrap";
+
+.team_loader {
+  background-color:white;
+  border:1px solid black;
+  display:none;
+  margin-top: 5%;
+  margin-left: 34%;
+  position:absolute;
+  text-align:left;
+  width: auto;
+  z-index:50;
+  padding: 25px 25px 20px;
+}
+
+a.selected {
+  background-color:#1F75CC;
+  color:white;
+  z-index:100;
+}
+
+.window_labels {
+  display: block;
+  margin-bottom: 3px;
+  padding-left: 15px;
+  text-indent: -15px;
+}
+
+// ------------------------
+
+.flash_notice {
+  color: red;
+}
+
+.header {
+  height: 85px;
+  border-bottom-color: black;
+  border-bottom-style: solid;
+}
+
+.trade_box {
+  height: 300px;
+  border: solid;
+  border-color: yellow;
+}
+
+.stock_ticker {
+  height: auto;
+  border: solid;
+  border-color: green;
+}
+
+.scores {
+  height: auto;
+  border: solid;
+  border-color: blue;
+}
+
+ul {
+    list-style-type: none;
+}
+
+th {
+  text-align: center;
+}
+tbody .dashboard_tr {
+  display:none;
+}
+
+td {
+  text-align: center;
+}
+
+.team_loader span {
+  cursor: pointer;
+}

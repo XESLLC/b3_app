@@ -1,0 +1,44 @@
+<%= form_for @user_share do |f| %>
+<legend> <span class="">
+  Initial Team Stock Buy:
+</span> <span class="pull-right">
+  <%= "available points #{current_user.points_to_spend}" %>
+</span></legend>
+
+      <div class = "form-group col-md-8">
+        <%= f.label :team_id, "Team | Cost" %>
+        <%= f.collection_select(:team_id, Team.all, :id, :name_with_points, {}, :class=> "form-control") %>
+      </div>
+      <div class = "form-group col-md-4">
+        <%= f.label :number_of_shares, "Number of Shares" %>
+        <%= f.text_field :number_of_shares, :class=>"form-control", :placeholder=>"Number of Shares" %>
+      </div>
+      <div class="col-md-6">
+      <%= f.button "Buy Shares", :class=> "btn btn-primary"%>
+      </div>
+<% end %>
+<p></p>
+
+<table class = "table" style="margin-top: 15%">
+  <caption><form><legend> Purchased Stocks: </legend></form></caption>
+  <thead>
+    <tr>
+    <th>Team</th>
+    <th>Shares</th>
+    <th>Total Points</th>
+    <th><div class="">
+      Delete Shares
+    </div></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @user_shares.each do |user_share| %>
+      <tr>
+          <td><%= user_share.team.name %></td>
+          <td><%= user_share.number_of_shares %></td>
+          <td><%= user_share.number_of_shares * user_share.team.points_per_share %></td>
+          <td><%= link_to "Remove", user_share_path(user_share.id), method: :delete  %>         </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

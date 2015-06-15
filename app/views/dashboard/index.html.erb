@@ -1,14 +1,94 @@
-<h1>
-  <% if current_user %>
-    <%= "Trading Board for #{current_user.first_name} #{current_user.last_name}"  %>
-  <% else %>
-    Please <%=link_to "Sign In", new_auth_path %> to see your dashboard
-  <% end %>
-</h1>
+  <h3 style = "text-align: center">
+    <% if current_user %>
+      <%= "Trading Board for #{current_user.first_name} #{current_user.last_name}"  %>
+    <% else %>
+      Please <%=link_to "Sign In", new_auth_path %> to see your dashboard
+    <% end %>
+  </h3>
 
-<% if current_user %>
-  <%= link_to "Sign Out", destroy_auth_path, method: :delete %>
-<% else %>
-  <%= link_to "Sign In", new_auth_path %>
-  <%=link_to "Sign Up", new_user_path %>
-<% end %>
+  <div class="team_loader">
+    <form>
+      <label for="team">Choose Teams to See Trade Data</label>
+      <%= collection_select(:team, :team_name, Team.all, :name, :name, {}, :class=> "form-control" ) %>
+      <p></p>
+      <span class="form-control" style="text-align: center">Then Click Here</span>
+    </form>
+  </div>
+
+  <table class = "table">
+    <thead>
+      <tr>
+      <th><div>Buy Points </div><div>Bid</div></th>
+      <th> Seed | Team<p></p></th>
+      <th><div>Sell Points </div><div>Ask</div></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @bid_ask.each_pair do |team_id, team_data| %>
+        <tr class = "dashboard_tr">
+            <td><%= team_data[2][:bid_points] %></td>
+            <td>
+              <span><%= "#{team_data[0][:seed]} | " %></span>
+              <span class="team_data"><%= "#{team_data[1][:name]}" %></span>
+            </td>
+            <td><%= team_data[3][:ask_points] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="stock_ticker">
+    <% @team_points_hash.each_pair do |team, team_data| %>
+      <div class="row stocks_rising">
+        <%if team_data[1] == true %>
+          <%= "#{team} #{team_data[0]}" %>
+        <% end %>
+      </div>
+      <div class="">
+        <h4>--Stock Ticker--</h4>
+      </div>
+      <div class="stocks_droppping">
+        <%if team_data[1] == false %>
+          <%= "#{team} #{team_data[0]}" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="scores">
+    <% if current_user %>
+      <div class="">
+        Team Bids,
+        <% @user_shares.each do |share| %>
+        <% points = share.bids.present? ? share.bids.last.points : 0.0 %>
+        <%= "#{share.team.name} #{points}" %>
+        <% end %>
+      </div>
+
+      <div class="">
+        Team Asks
+        <% @user_shares.each do |share| %>
+        <% points = share.asks.present? ? share.asks.last.points : 0.0 %>
+        <%= "#{share.team.name} #{points}" %>
+        <% end %>
+      </div>
+
+      <div class="">
+        Executed Trades
+        <% @user_trades.each do |trade| %>
+        <%= "#{trade.bid.user_share.team.name} #{trade.points}" %>
+        <% end %>
+      </div>
+
+      <div class="">
+        Total Points
+        <%= @total_points %>
+        Current Points
+        <%= @current_points %>
+      </div>
+      <% else %>
+        <div class="">
+          Please Sign In
+        </div>
+      <% end %>
+  </div>

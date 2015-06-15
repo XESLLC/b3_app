@@ -1,21 +1,35 @@
-<%= flash[:notice] %>
-
-<h1>New Users Page</h1>
-
 <%= form_for @user do |f| %>
-  <%= f.label :first_name, "First Name" %>
-  <%= f.text_field :first_name %>
-  <%= f.label :last_name, "Last Name" %>
-  <%= f.text_field :last_name %>
-  <%= f.label :username, "User Name" %>
-  <%= f.text_field :username %>
-  <%= f.label :years_in_game, "Years you have Played this game" %>
-  <%= f.number_field :years_in_game %>
-  <%= f.label :email, "Email Address" %>
-  <%= f.text_field :email %>
-  <%= f.label :password, "Password" %>
-  <%= f.password_field :password %>
-  <%= f.label :password_confirmation, "Password Confirmation" %>
-  <%= f.password_field :password_confirmation %>
-  <%= f.submit "Create A New User" %>
+<legend>Sign Up:</legend>
+      <div class = "form-group col-md-6">
+        <%= f.label :first_name, "First Name" %>
+        <%= f.text_field :first_name, :class=>"form-control", :placeholder=>"First Name" %>
+      </div>
+      <div class = "form-group col-md-6">
+        <%= f.label :last_name, "Last Name" %>
+        <%= f.text_field :last_name, :class=>"form-control", :placeholder=>"Last Name" %>
+      </div>
+      <div class = "form-group col-md-2">
+        <%= f.label :years_in_game, "Years Played" %>
+        <%= f.number_field :years_in_game, :class=>"form-control", :placeholder=>"Years Played" %>
+      </div>
+      <div class = "form-group col-md-4">
+        <%= f.label :username, "User Name" %>
+        <%= f.text_field :username, :class=>"form-control", :placeholder=>"Username" %>
+      </div>
+      <div class = "form-group col-md-6">
+        <%= f.label :email, "Email Address" %>
+        <%= f.text_field :email, :class=>"form-control", :placeholder=>"Email" %>
+      </div>
+      <div class = "form-group col-md-6">
+        <%= f.label :password, "Password" %>
+        <%= f.password_field :password, :class=>"form-control", :placeholder=>"Password" %>
+      </div>
+      <div class = "form-group col-md-6">
+        <%= f.label :password_confirmation, "Password Confirmation" %>
+        <%= f.password_field :password_confirmation, :class=>"form-control", :placeholder=>"Password Confirmation" %>
+      </div>
+      <div class="col-md-6">
+      <%= f.button "Create A New User", :class=> "btn btn-primary"%>
+      </div>
+
 <% end %>

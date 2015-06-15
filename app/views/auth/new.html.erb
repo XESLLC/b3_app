@@ -1,9 +1,14 @@
-Please Sign In
+<%= form_tag url_for(:controller => 'auth', :action => 'create'), :method => 'post' do %><div class="">
 
-<%= form_tag url_for(:controller => 'auth', :action => 'create'), :method => 'post' do %>
-<%= label_tag :username, "Username" %>
-<%= text_field_tag :username %>
-<%= label_tag :password, "Password" %>
-<%= password_field_tag :password %>
-<%= submit_tag "Sign In" %>
+</div>
+  <fieldset>
+    <legend>Sign In:</legend>
+    <%= label_tag :username, "Username" %>
+    <%= text_field_tag :username %>
+    <%= label_tag :password, "Password" %>
+    <%= password_field_tag :password %>
+    <div style = "float: right">
+    <%= button_tag "Sign In", :class=> "btn btn-primary sign_in" %>
+    </div>
+  </fieldset>
 <% end %>
