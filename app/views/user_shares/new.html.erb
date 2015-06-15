@@ -1,21 +1,21 @@
 <%= form_for @user_share do |f| %>
-<legend> <span class="">
-  Initial Team Stock Buy:
-</span> <span class="pull-right">
-  <%= "available points #{current_user.points_to_spend}" %>
-</span></legend>
+  <legend><span>Initial Team Stock Buy:</span><span class="pull-right"><%= "available points #{current_user.points_to_spend.round(2)}" %></span></legend>
+    <div class = "form-group col-md-8">
+      <%= f.label :team_id, "Team | Cost" %>
+      <%= f.collection_select(:team_id, Team.order(:name), :id, :name_with_points, {}, :class=> "form-control") %>
+    </div>
+    <div class = "form-group col-md-4">
+      <%= f.label :number_of_shares, "Number of Shares" %>
+      <%= f.text_field :number_of_shares, :class=>"form-control", :placeholder=>"Number of Shares" %>
+    </div>
+    <div class = "form-group col-md-8">
+      <%= label_tag :bid_points_share, "Initial Bid Points per Share" %>
+      <%= number_field_tag :bid_points_share, value = nil, :class=>"form-control", :placeholder=>"Default: Initial Points x 10" %>
+    </div>
+    <div class="col-md-4" style="margin-top: 24px">
+      <%= f.button "Buy Shares", :class=> "btn btn-primary pull-right"%>
+    </div>
 
-      <div class = "form-group col-md-8">
-        <%= f.label :team_id, "Team | Cost" %>
-        <%= f.collection_select(:team_id, Team.all, :id, :name_with_points, {}, :class=> "form-control") %>
-      </div>
-      <div class = "form-group col-md-4">
-        <%= f.label :number_of_shares, "Number of Shares" %>
-        <%= f.text_field :number_of_shares, :class=>"form-control", :placeholder=>"Number of Shares" %>
-      </div>
-      <div class="col-md-6">
-      <%= f.button "Buy Shares", :class=> "btn btn-primary"%>
-      </div>
 <% end %>
 <p></p>
 
@@ -36,7 +36,7 @@
       <tr>
           <td><%= user_share.team.name %></td>
           <td><%= user_share.number_of_shares %></td>
-          <td><%= user_share.number_of_shares * user_share.team.points_per_share %></td>
+          <td><%= (user_share.number_of_shares * user_share.team.points_per_share).round(2) %></td>
           <td><%= link_to "Remove", user_share_path(user_share.id), method: :delete  %>         </td>
       </tr>
     <% end %>

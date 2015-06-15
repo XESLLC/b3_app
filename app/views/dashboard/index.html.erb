@@ -40,15 +40,12 @@
   <div class="stock_ticker">
     <% @team_points_hash.each_pair do |team, team_data| %>
       <div class="row stocks_rising">
-        <%if team_data[1] == true %>
+        <%if team_data[1] && team_data[0] > 0 %>
           <%= "#{team} #{team_data[0]}" %>
         <% end %>
       </div>
-      <div class="">
-        <h4>--Stock Ticker--</h4>
-      </div>
       <div class="stocks_droppping">
-        <%if team_data[1] == false %>
+        <%if !team_data[1] && team_data[0] > 0 %>
           <%= "#{team} #{team_data[0]}" %>
         <% end %>
       </div>
