@@ -115,4 +115,8 @@ $(document).ready(function() {
     session_team_picks = [];
     sessionStorage.team_picks = [];
   });
+
+  
+
+
 });

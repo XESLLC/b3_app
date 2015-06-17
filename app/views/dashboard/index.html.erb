@@ -9,7 +9,7 @@
   <div class="team_loader">
     <form>
       <label for="team">Choose Teams to See Trade Data</label>
-      <%= collection_select(:team, :team_name, Team.all, :name, :name, {}, :class=> "form-control" ) %>
+      <%= collection_select(:team, :team_name, Team.order(:name), :name, :name, {}, :class=> "form-control" ) %>
       <p></p>
       <span class="form-control" style="text-align: center">Then Click Here</span>
     </form>
@@ -18,20 +18,24 @@
   <table class = "table">
     <thead>
       <tr>
-      <th><div>Buy Points </div><div>Bid</div></th>
-      <th> Seed | Team<p></p></th>
-      <th><div>Sell Points </div><div>Ask</div></th>
+        <th class= "col-md-1"><div>Your Bid</div></th>
+        <th class= "col-md-1"><div>Buy Points </div><div>Bid</div></th>
+        <th class= "col-md-8"> Seed | Team<p></p></th>
+        <th class= "col-md-1"><div class = "pull-right">Sell Points </div><div>Ask</div></th>
+        <th><div>Your Ask</div></th>
       </tr>
     </thead>
     <tbody>
       <% @bid_ask.each_pair do |team_id, team_data| %>
         <tr class = "dashboard_tr">
-            <td><%= team_data[2][:bid_points] %></td>
-            <td>
-              <span><%= "#{team_data[0][:seed]} | " %></span>
-              <span class="team_data"><%= "#{team_data[1][:name]}" %></span>
-            </td>
-            <td><%= team_data[3][:ask_points] %></td>
+          <td></td>
+          <td><%= team_data[2][:bid_points] %></td>
+          <td>
+            <span><%= "#{team_data[0][:seed]} | " %></span>
+            <span class="team_data"><%= "#{team_data[1][:name]}" %></span>
+          </td>
+          <td><%= team_data[3][:ask_points] %></td>
+         <td></td>
         </tr>
       <% end %>
     </tbody>
@@ -54,7 +58,9 @@
 
   <div class="scores">
     <% if current_user %>
-      <div class="">
+      <div class="bid_create">
+      </div>
+      <div class="bid_rolodex">
         Team Bids,
         <% @user_shares.each do |share| %>
         <% points = share.bids.present? ? share.bids.last.points : 0.0 %>
@@ -62,7 +68,7 @@
         <% end %>
       </div>
 
-      <div class="">
+      <div class="ask_rolodex">
         Team Asks
         <% @user_shares.each do |share| %>
         <% points = share.asks.present? ? share.asks.last.points : 0.0 %>

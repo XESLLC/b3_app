@@ -15,6 +15,13 @@ before_action :is_signed_in_or_guest
       ask_points = 0.00 if team.asks.last.nil?
       @bid_ask[team.id] << {bid_points: bid_points || team.bids.reorder('points').last.points }
       @bid_ask[team.id] << {ask_points: ask_points || team.asks.reorder('points').last.points }
+      user_team_shares = current_user.user_shares.where(team_id: team.id)
+      @bid_ask[team.id] << {user_bids: [0]}
+      @bid_ask[team.id] << {user_asks: [0]}
+      user_team_shares.each do |user_team_share|
+        @bid_ask[team.id][4][:user_bids] << 0
+        @bid_ask[team.id][5][:user_asks] << 0
+      end
     end
 
     @team_points_hash = {}
@@ -36,7 +43,9 @@ before_action :is_signed_in_or_guest
       end
       @team_points_hash[:"#{team.name}"] = [team_points, team_points > trade_points.last ]
     end
+
     if current_user
+      @user_share = UserShare.new
       @user_trades = []
       @user_shares = current_user.user_shares if current_user.user_shares
       current_user.bids.each do |bid|
@@ -50,6 +59,7 @@ before_action :is_signed_in_or_guest
       @total_points = 0
       @current_points = 0
     end
+
   end
 
   def pick_teams

@@ -10,8 +10,8 @@ class UserSharesController < ApplicationController
   def create
     @user_share = UserShare.new(user_shares_params.merge(user_id: current_user.id))
     if @user_share.save
-      intial_bid_points = params[:bid_points_share].to_i == 0 ? @user_share.team.points_per_share*10 : @user_share.number_of_shares*params[:bid_points_share].to_i
-      Bid.create!(user_share_id: @user_share.id, shares: @user_share.number_of_shares, points: intial_bid_points.round(2))
+      intial_ask_points = params[:ask_points_share] == "0" ? @user_share.team.points_per_share*10 : @user_share.number_of_shares*params[:ask_points_share].to_i
+      Ask.create!(user_share_id: @user_share.id, shares: @user_share.number_of_shares, points: intial_ask_points.round(2))
       points = current_user.points_to_spend
       points_spent = @user_share.number_of_shares * @user_share.team.points_per_share
       current_user.update(points_to_spend: points-points_spent)
