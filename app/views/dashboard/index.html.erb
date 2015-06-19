@@ -8,58 +8,80 @@
 
   <div class="team_loader">
     <form>
-      <label for="team">Choose Teams to See Trade Data</label>
+      <%= label_tag :team, "Choose Teams to See Trade Data" %>
       <%= collection_select(:team, :team_name, Team.order(:name), :name, :name, {}, :class=> "form-control" ) %>
       <p></p>
-      <span class="form-control" style="text-align: center">Then Click Here</span>
+      <span class="form-control" style="text-align: center">Add Team to Table</span>
+      <p></p>
+      <span class="form-control see_all_button" style="text-align: center"> See All Teams </span>
+    </form>
+  </div>
+
+  <div class="bid_loader">
+    <form>
+      <%= label_tag :team, "Team" %>
+      <%= collection_select(:team, :team_name, Team.order(:name), :name, :name, {}, :class=> "form-control bid_team_select" ) %>
+      <p></p>
+      <%= label_tag :bid_shares, "Number of Shares" %>
+      <%= number_field_tag :bid_shares, value = nil, :class=>"form-control bid_share_field", :placeholder=>"Number of Shares"  %>
+      <p></p>
+      <%= label_tag :new_bid_points, "Bid Points" %>
+      <%= number_field_tag :new_bid_points, value = nil, :class=>"form-control bid_field", :placeholder=>"Points per Share"  %>
+      <p></p>
+      <span class="form-control bid_button" style="text-align: center">Create New Bid</span>
+      <p></p>
+      <span class="form-control see_all_button" style="text-align: center"> See All Teams </span>
+    </form>
+  </div>
+
+  <div class="ask_loader">
+    <form>
+      <%= label_tag :team, "Team" %>
+      <%= collection_select(:team, :team_name, @user_teams, :name, :name, {}, :class=> "form-control ask_team_select" ) %>
+      <p></p>
+      <%= label_tag :ask_shares, "Number of Shares" %>
+      <%= number_field_tag :ask_shares, value = nil, :class=>"form-control ask_share_field", :placeholder=>"Number of Shares"  %>
+      <p></p>
+      <%= label_tag :new_ask_points, "Ask Points" %>
+      <%= number_field_tag :new_ask_points, value = nil, :class=>"form-control ask_field", :placeholder=>"Points per Share"  %>
+      <p></p>
+      <span class="form-control" style="text-align: center">Create New Ask</span>
+      <p></p>
+      <span class="form-control see_all_button" style="text-align: center"> See All </span>
     </form>
   </div>
 
   <table class = "table">
     <thead>
       <tr>
-        <th class= "col-md-1"><div>Your Bid</div></th>
+        <th class= "col-md-1 bid_loader_onclick">Your Bid</th>
         <th class= "col-md-1"><div>Buy Points </div><div>Bid</div></th>
-        <th class= "col-md-8"> Seed | Team<p></p></th>
+        <th class= "col-md-8 team_loader_onclick"> Seed | Team<p></p></th>
         <th class= "col-md-1"><div class = "pull-right">Sell Points </div><div>Ask</div></th>
-        <th><div>Your Ask</div></th>
+        <th class= "col-md-1 ask_loader_onclick">Your Ask</th>
       </tr>
     </thead>
     <tbody>
       <% @bid_ask.each_pair do |team_id, team_data| %>
         <tr class = "dashboard_tr">
-          <td></td>
-          <td><%= team_data[2][:bid_points] %></td>
+          <td class= "bid_data"><%= "#{team_data[:user_bids].join(" , ")}" %></td>
+          <td><%= number_with_precision(team_data[:bid_points], precision: 2) %></td>
           <td>
-            <span><%= "#{team_data[0][:seed]} | " %></span>
-            <span class="team_data"><%= "#{team_data[1][:name]}" %></span>
+            <span><%= "#{team_data[:seed]} | " %></span>
+            <span class="team_data"><%= "#{team_data[:name]}" %></span>
           </td>
-          <td><%= team_data[3][:ask_points] %></td>
-         <td></td>
+          <td><%= number_with_precision(team_data[:ask_points], precision: 2) %></td>
+         <td class= "ask_data"><%= "#{team_data[:user_asks].join(" , ")}" %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
 
-  <div class="stock_ticker">
-    <% @team_points_hash.each_pair do |team, team_data| %>
-      <div class="row stocks_rising">
-        <%if team_data[1] && team_data[0] > 0 %>
-          <%= "#{team} #{team_data[0]}" %>
-        <% end %>
-      </div>
-      <div class="stocks_droppping">
-        <%if !team_data[1] && team_data[0] > 0 %>
-          <%= "#{team} #{team_data[0]}" %>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-
   <div class="scores">
     <% if current_user %>
       <div class="bid_create">
       </div>
+
       <div class="bid_rolodex">
         Team Bids,
         <% @user_shares.each do |share| %>
@@ -94,4 +116,19 @@
           Please Sign In
         </div>
       <% end %>
+  </div>
+
+  <div class="stock_ticker">
+    <% @team_points_hash.each_pair do |team, team_trade_data| %>
+      <div class="row stocks_rising">
+        <%if team_trade_data[1] == true %>
+          <%= "#{team} #{team_trade_data[0]}" %>
+        <% end %>
+      </div>
+      <div class="stocks_droppping">
+        <%if team_trade_data[1] == false %>
+          <%= "#{team} #{team_trade_data[0]}" %>
+        <% end %>
+      </div>
+    <% end %>
   </div>

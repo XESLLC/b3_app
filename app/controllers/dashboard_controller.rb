@@ -5,25 +5,31 @@ before_action :is_signed_in_or_guest
   def index
     is_guest
     @user = User.find(current_user.id) if current_user
-    @teams = Team.all
+    @teams = Team.all.order(:name)
+    @user_teams = []
+    @user.user_shares.each {|share| @user_teams << @teams.find(share.team_id)} if current_user
+    @user_teams.sort!{|a,b| a.name <=> b.name}
     @bid_ask = {}
     @teams.each do |team|
-      @bid_ask[team.id] = []
-      @bid_ask[team.id] << {seed: team.seed}
-      @bid_ask[team.id] << {name: team.name}
+      @bid_ask[team.id] = {}
+      @bid_ask[team.id][:seed] = team.seed
+      @bid_ask[team.id][:name] = team.name
       bid_points = 0.00 if team.bids.last.nil?
       ask_points = 0.00 if team.asks.last.nil?
-      @bid_ask[team.id] << {bid_points: bid_points || team.bids.reorder('points').last.points }
-      @bid_ask[team.id] << {ask_points: ask_points || team.asks.reorder('points').last.points }
-      user_team_shares = current_user.user_shares.where(team_id: team.id)
-      @bid_ask[team.id] << {user_bids: [0]}
-      @bid_ask[team.id] << {user_asks: [0]}
-      user_team_shares.each do |user_team_share|
-        @bid_ask[team.id][4][:user_bids] << 0
-        @bid_ask[team.id][5][:user_asks] << 0
-      end
+      @bid_ask[team.id][:bid_points] = bid_points || team.bids.reorder('points').last.points
+      @bid_ask[team.id][:ask_points] = ask_points || team.asks.reorder('points').first.points
+      current_user.present? ? user_team_shares = current_user.user_shares.where(team_id: team.id) : user_team_shares = []
+      @bid_ask[team.id][:user_bids] = []
+      @bid_ask[team.id][:user_asks] = []
+      user_bids = []
+      user_asks = []
+        user_team_shares.each do |user_team_share|
+          user_team_share.bids.each {|bid| user_bids = bid.points}
+          @bid_ask[team.id][:user_bids] << user_bids if user_bids != []
+          user_team_share.asks.each {|ask| user_asks = ask.points}
+          @bid_ask[team.id][:user_asks] << user_asks if user_asks != []
+        end
     end
-
     @team_points_hash = {}
     @teams.each do |team|
       ask_points = []

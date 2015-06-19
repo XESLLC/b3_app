@@ -19,6 +19,24 @@
 
 $(document).ready(function() {
 
+  var show_all
+  $(document).on("click",".see_all_button", function() {
+    show_all = show_all ? false : true
+    $(".team_data").each(function(row) {
+      var that = this
+      team_picks.forEach(function(team){
+        if (show_all) {
+          $(".see_all_button").css("background-color", "yellow");
+          $(that).closest('.dashboard_tr').css('display', 'table-row');
+        }
+        if (!show_all) {
+          $(".see_all_button").css("background-color", "white");
+          $(that).closest('.dashboard_tr').css('display', 'none');
+        }
+      });
+    });
+  });
+
   var team_picks = $.parseJSON(sessionStorage.team_picks || '[]');
   if (team_picks == [] || team_picks == "") {
     $.ajax({
@@ -29,7 +47,6 @@ $(document).ready(function() {
           console.log(error);
         },
         success: function(team_picks) {
-          console.log(JSON.stringify(team_picks));
           sessionStorage.team_picks = JSON.stringify(team_picks);
           location.reload();
         }
@@ -37,7 +54,7 @@ $(document).ready(function() {
   };
 
   $(document).on("click",".dashboard", function() {
-    setTimeout(function(){location.reload();},1000);
+    setTimeout(function(){location.reload();},2000);
   });
 
   $(".team_data").each(function(row) {
@@ -54,26 +71,32 @@ $(document).ready(function() {
     $(this).css('cursor','pointer');
   });
 
-	$(document).on("click","thead tr th", function() {
-    if($(this).hasClass('selected')) {
-      deselect($(this));
-    } else {
-      $(this).addClass('selected');
+  $.fn.slideFadeToggle = function() {
+      return this.animate({ opacity: 'toggle', height: 'toggle' }, 'slow');
+    };
+
+  var teamLoaderIsOpen
+  $('body').click(function(event) {
+    var isInTeamLoader = $(event.target).hasClass("team_loader");
+    var isInChildOfLoader = $(event.target).parent().hasClass("team_loader");
+    var isInGrandChildOfLoader = $(event.target).parent().parent().hasClass("team_loader");
+    var isInTh = $(event.target).hasClass("team_loader_onclick")
+    if (isInTeamLoader || isInChildOfLoader || isInGrandChildOfLoader) {
+      console.log("Do Nothing")
+    } else if (isInTh) {
+      console.log ("Open or Close")
+      teamLoaderIsOpen = teamLoaderIsOpen ? false : true
       $('.team_loader').slideFadeToggle();
+    } else {
+      console.log("Close Only")
+      if (teamLoaderIsOpen) {
+        $('.team_loader').slideFadeToggle();
+        teamLoaderIsOpen = false;
+      }
     }
   });
 
-  function deselect(e) {
-    $('.team_loader').slideFadeToggle(function() {
-      e.removeClass('selected');
-    });
-  }
-
-  $.fn.slideFadeToggle = function(easing, callback) {
-      return this.animate({ opacity: 'toggle', height: 'toggle' }, 'slow', easing, callback);
-    };
-
-  $(document).on("click",".team_loader span", function(e) {
+  $(document).on("click",".team_loader span", function() {
     if (team_picks == undefined || null) team_picks = [];
     $(".team_data").each(function(row) {
       if ($(this).text() === $(".team_loader select").val()) {
@@ -84,18 +107,130 @@ $(document).ready(function() {
       }
     });
   });
+  // -------------------------------------------------------------
+  var bidLoaderIsOpen
+  $('body').click(function(event) {
+    var isInBidLoader = $(event.target).hasClass("bid_loader");
+    var isInChildOfLoader = $(event.target).parent().hasClass("bid_loader");
+    var isInGrandChildOfLoader = $(event.target).parent().parent().hasClass("bid_loader");
+    var isInTh = $(event.target).hasClass("bid_loader_onclick")
+    if (isInBidLoader || isInChildOfLoader || isInGrandChildOfLoader) {
+      console.log("Do Nothing")
+    } else if (isInTh) {
+      console.log ("Open or Close")
+      bidLoaderIsOpen = bidLoaderIsOpen ? false : true
+      $('.bid_loader').slideFadeToggle();
+    } else {
+      console.log("Close Only")
+      if (bidLoaderIsOpen) {
+        $('.bid_loader').slideFadeToggle();
+        bidLoaderIsOpen = false;
+      }
+    }
+  });
 
+  $(document).on("click",".bid_loader span", function(e) {
+    var team_name = ($(".bid_team_select").val());
+    var shares = ($('.bid_share_field').val());
+    var bid_points_share = ($('.bid_field').val());
+      $.ajax({
+          type: "POST",
+          url: "user_shares/create_bid",
+          data: {"team_name": team_name, "bid_shares": shares, "bid_points_share": bid_points_share},
+          error: function(error){
+            console.log(error);
+          },
+          success: function(data) {
+            console.log("new bid was sent");
+            $('.bid_data').each(function(i,td) {
+              if ($(td).closest("tr").find(".team_data").html() === data.team.name) {
+                team_picks.push(data.team.name);
+                sessionStorage.team_picks = JSON.stringify(team_picks);
+                $(this).parent().css('display', 'table-row');
+                $(this).css('cursor','pointer');
+                existing_text = $(this).parent().find('.bid_data').text();
+                if (existing_text === "") {
+                  $(this).parent().find('.bid_data').text(Number(data.bid.points).toFixed(2));
+                } else {
+                  $(this).parent().find('.bid_data').text(existing_text + ', '+ Number(data.bid.points).toFixed(2));
+                }
+              }
+            });
+          }
+        });
+      e.preventDefault();
+      session_team_picks = [];
+      sessionStorage.team_picks = [];
+  });
+  // -------------------------------------------------------------
+  var askLoaderIsOpen
+  $('body').click(function(event) {
+    var isInAskLoader = $(event.target).hasClass("ask_loader");
+    var isInChildOfLoader = $(event.target).parent().hasClass("ask_loader");
+    var isInGrandChildOfLoader = $(event.target).parent().parent().hasClass("ask_loader");
+    var isInTh = $(event.target).hasClass("ask_loader_onclick")
+    if (isInAskLoader || isInChildOfLoader || isInGrandChildOfLoader) {
+      console.log("Do Nothing")
+    } else if (isInTh) {
+      console.log ("Open or Close")
+      askLoaderIsOpen = askLoaderIsOpen ? false : true
+      $('.ask_loader').slideFadeToggle();
+    } else {
+      console.log("Close Only")
+      if (askLoaderIsOpen) {
+        $('.ask_loader').slideFadeToggle();
+        askLoaderIsOpen = false;
+      }
+    }
+  });
+
+  $(document).on("click",".ask_loader span", function(e) {
+    var team_name = ($(".ask_team_select").val());
+    var ask_points_share = ($('.ask_field').val());
+    var shares = ($('.ask_share_field').val());
+      $.ajax({
+          type: "POST",
+          url: "user_shares/create_ask",
+          data: {"team_name": team_name, "ask_shares": shares, "ask_points_share": ask_points_share},
+          error: function(error){
+            console.log(error);
+          },
+          success: function(data) {
+            console.log("new ask was sent");
+
+            $('.ask_data').each(function(i,td) {
+              if ($(td).closest("tr").find(".team_data").html() === data.team.name) {
+                team_picks.push(data.team.name);
+                sessionStorage.team_picks = JSON.stringify(team_picks);
+                $(this).parent().css('display', 'table-row');
+                $(this).css('cursor','pointer');
+                existing_text = $(this).parent().find('.ask_data').text();
+                if (existing_text === "") {
+                  $(this).parent().find('.ask_data').text(Number(data.ask.points).toFixed(2));
+                } else {
+                  $(this).parent().find('.ask_data').text(existing_text + ' '+ Number(data.ask.points).toFixed(2));
+                }
+              }
+            });
+          }
+        });
+      e.preventDefault();
+      session_team_picks = [];
+      sessionStorage.team_picks = [];
+  });
+  // -------------------------------------------------------------
   var timeoutId = 0;
   $('tbody .dashboard_tr').mousedown(function() {
     var that = $(this).find('.team_data');
-    function myFunction(){
+    function hideTeam(){
       var new_team_picks = team_picks.filter(function(elem){
-        elem !== (that).text()
+        return elem !== (that).text();
       });
-      sessionStorage.team_picks = JSON.stringify(new_team_picks);
+      team_picks = new_team_picks
+      sessionStorage.team_picks = JSON.stringify(team_picks);
       $(that).closest('.dashboard_tr').css('display', 'none');
     }
-    timeoutId = setTimeout(myFunction, 2000);
+      timeoutId = setTimeout(hideTeam, 2000);
   }).bind('mouseup mouseleave', function() {
     clearTimeout(timeoutId);
   });
@@ -110,13 +245,9 @@ $(document).ready(function() {
         success: function() {
           console.log("session sent to user controller");
         }
-      })
+      });
     e.preventDefault();
     session_team_picks = [];
     sessionStorage.team_picks = [];
   });
-
-  
-
-
 });

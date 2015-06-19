@@ -7,7 +7,7 @@ class UserShare < ActiveRecord::Base
 
   validates :team_id, presence: true
   validates :user_id, presence: true
-  validates :number_of_shares, presence: true
+  validates :number_of_shares, presence: true, :numericality => { :greater_than_or_equal_to => 0 }
   validate :has_enough_points
 
   def has_enough_points

@@ -23,7 +23,33 @@
   display:none;
   margin-top: 5%;
   margin-left: 34%;
-  position:absolute;
+  position:fixed;
+  text-align:left;
+  width: auto;
+  z-index:50;
+  padding: 25px 25px 20px;
+}
+
+.bid_loader {
+  background-color:white;
+  border:1px solid black;
+  display:none;
+  margin-top: 5%;
+  margin-left: 8%;
+  position:fixed;
+  text-align:left;
+  width: auto;
+  z-index:50;
+  padding: 25px 25px 20px;
+}
+
+.ask_loader {
+  background-color:white;
+  border:1px solid black;
+  display:none;
+  margin-top: 5%;
+  margin-left: 60%;
+  position:fixed;
   text-align:left;
   width: auto;
   z-index:50;
@@ -88,6 +114,6 @@ td {
   text-align: center;
 }
 
-.team_loader span {
+.team_loader, .bid_loader, .ask_loader span {
   cursor: pointer;
 }
