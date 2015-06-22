@@ -19,6 +19,57 @@
 
 $(document).ready(function() {
 
+  function stockTicker(speed){
+    var groupStart = 63
+    var groupEnd = groupStart - 6
+    var poistionAdjust = 0
+    var poistionAdjust = 225;
+    var id = setInterval(function(){
+
+      for (var i = groupStart; i > groupEnd ; i--) {
+        $('.stocks_droppping').eq(i).css({
+          display: 'inline-block',
+          color: 'red'
+        });
+
+        var newPosition = parseInt($('.stocks_droppping').eq(groupStart).css('left').slice(0,-2))+ 2;
+
+        if (newPosition < 150) {
+          $('.stocks_droppping').eq(i).css({
+            left: newPosition,
+          })
+        } else {
+          $('.stocks_droppping').eq(i).css({
+            left: newPosition - poistionAdjust,
+          })
+          $('.stocks_droppping').eq(groupStart).css({
+              display: 'none',
+              color: 'black'
+          });
+          groupStart -= 1;
+          groupEnd -= 1;
+          if (groupEnd == -2) {
+            groupStart = 63;
+            groupEnd = groupStart - 6;
+            clearInterval(id);
+            setTimeout(function() {
+              for (var i = 0; i < 63; i++) {
+                $('.stocks_droppping').eq(i).css({
+                    display: 'none',
+                    color: 'black',
+                    left: '-1000px'
+                });
+              }
+              stockTicker(5);
+            }, 3000);
+          }
+        }
+      }
+    },speed);
+  };
+
+  stockTicker(5)
+
   var show_all
   $(document).on("click",".see_all_button", function() {
     show_all = show_all ? false : true

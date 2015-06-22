@@ -88,9 +88,10 @@ a.selected {
 }
 
 .stock_ticker {
-  height: auto;
-  border: solid;
-  border-color: green;
+  bottom: 10%;
+  left: 0px;
+  position: fixed;
+  height: 55px;
 }
 
 .scores {
@@ -116,4 +117,43 @@ td {
 
 .team_loader, .bid_loader, .ask_loader span {
   cursor: pointer;
+}
+
+.row stocks_rising {
+  float: left;
+  background-color:white;
+  border:1px solid black;
+  display: none;
+  margin-top: 5%;
+  margin-left: 8%;
+  position:fixed;
+  text-align:left;
+  width: auto;
+  z-index:50;
+  padding: 25px 25px 20px;
+}
+
+.stocks_rising {
+  background-color:white;
+  display: none;
+  bottom: 5%;
+  left: 0px;
+  position: relative;
+  text-align:left;
+  width: 10px;
+  z-index:55;
+  padding: 5px;
+}
+
+.stocks_droppping {
+  white-space:nowrap;
+  background-color:white;
+  display: none;
+  bottom: 5%;
+  left: -1000px;
+  position: relative;
+  text-align:center;
+  width: 220px;
+  z-index:0;
+  padding: 5px;
 }

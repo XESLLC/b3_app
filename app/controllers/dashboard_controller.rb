@@ -31,7 +31,7 @@ before_action :is_signed_in_or_guest
         end
     end
     @team_points_hash = {}
-    @teams.each do |team|
+    @teams.reverse.each do |team|
       ask_points = []
       team.asks.each do |ask|
         ask_points << ask.trade.points if ask.trade
