@@ -22,7 +22,7 @@
   border:1px solid black;
   display:none;
   margin-top: 5%;
-  margin-left: 34%;
+  margin-left: 32%;
   position:fixed;
   text-align:left;
   width: auto;
@@ -89,9 +89,10 @@ a.selected {
 
 .stock_ticker {
   bottom: 10%;
-  left: 0px;
+  left: -200%;
   position: fixed;
   height: 55px;
+  width: 400%;
 }
 
 .scores {
@@ -150,7 +151,7 @@ td {
   background-color:white;
   display: none;
   bottom: 5%;
-  left: -1000px;
+  left: -1000 px;
   position: relative;
   text-align:center;
   width: 220px;

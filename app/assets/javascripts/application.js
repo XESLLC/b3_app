@@ -19,56 +19,55 @@
 
 $(document).ready(function() {
 
-  function stockTicker(speed){
-    var groupStart = 63
-    var groupEnd = groupStart - 6
-    var poistionAdjust = 0
-    var poistionAdjust = 225;
-    var id = setInterval(function(){
-
-      for (var i = groupStart; i > groupEnd ; i--) {
-        $('.stocks_droppping').eq(i).css({
-          display: 'inline-block',
-          color: 'red'
-        });
-
-        var newPosition = parseInt($('.stocks_droppping').eq(groupStart).css('left').slice(0,-2))+ 2;
-
-        if (newPosition < 150) {
-          $('.stocks_droppping').eq(i).css({
-            left: newPosition,
-          })
-        } else {
-          $('.stocks_droppping').eq(i).css({
-            left: newPosition - poistionAdjust,
-          })
-          $('.stocks_droppping').eq(groupStart).css({
-              display: 'none',
-              color: 'black'
-          });
-          groupStart -= 1;
-          groupEnd -= 1;
-          if (groupEnd == -2) {
-            groupStart = 63;
-            groupEnd = groupStart - 6;
-            clearInterval(id);
-            setTimeout(function() {
-              for (var i = 0; i < 63; i++) {
-                $('.stocks_droppping').eq(i).css({
-                    display: 'none',
-                    color: 'black',
-                    left: '-1000px'
-                });
-              }
-              stockTicker(5);
-            }, 3000);
-          }
-        }
-      }
-    },speed);
-  };
-
-  stockTicker(5)
+  // function stockTicker(speed){
+  //   var groupStart = 63
+  //   var groupEnd = groupStart - 12
+  //   var poistionAdjust = 0
+  //   var poistionAdjust = 225;
+  //   var id = setInterval(function(){
+  //
+  //     for (var i = groupStart; i > groupEnd ; i--) {
+  //       $('.stocks_droppping').eq(i).css({
+  //         display: 'inline-block',
+  //         color: 'red'
+  //       });
+  //
+  //       var newPosition = parseInt($('.stocks_droppping').eq(groupStart).css('left').slice(0,-2))+ 2;
+  //
+  //       if (newPosition < 2750) {
+  //         $('.stocks_droppping').eq(i).css({
+  //           left: newPosition,
+  //         })
+  //       } else {
+  //         $('.stocks_droppping').eq(i).css({
+  //           left: newPosition - poistionAdjust,
+  //         })
+  //         $('.stocks_droppping').eq(groupStart).css({
+  //             display: 'none',
+  //             color: 'black'
+  //         });
+  //         groupStart -= 1;
+  //         groupEnd -= 1;
+  //         if (groupEnd == -2) {
+  //           groupStart = 63;
+  //           groupEnd = groupStart - 6;
+  //           clearInterval(id);
+  //           setTimeout(function() {
+  //             for (var i = 0; i < 63; i++) {
+  //               $('.stocks_droppping').eq(i).css({
+  //                   display: 'none',
+  //                   color: 'black',
+  //                   left: '-1000px'
+  //               });
+  //             }
+  //             stockTicker(10);
+  //           }, 3000);
+  //         }
+  //       }
+  //     }
+  //   },speed);
+  // };
+ // stockTicker(5);
 
   var show_all
   $(document).on("click",".see_all_button", function() {
@@ -127,7 +126,7 @@ $(document).ready(function() {
     };
 
   var teamLoaderIsOpen
-  $('body').click(function(event) {
+  $(document).click(function(event) {
     var isInTeamLoader = $(event.target).hasClass("team_loader");
     var isInChildOfLoader = $(event.target).parent().hasClass("team_loader");
     var isInGrandChildOfLoader = $(event.target).parent().parent().hasClass("team_loader");
@@ -160,7 +159,7 @@ $(document).ready(function() {
   });
   // -------------------------------------------------------------
   var bidLoaderIsOpen
-  $('body').click(function(event) {
+  $(document).click(function(event) {
     var isInBidLoader = $(event.target).hasClass("bid_loader");
     var isInChildOfLoader = $(event.target).parent().hasClass("bid_loader");
     var isInGrandChildOfLoader = $(event.target).parent().parent().hasClass("bid_loader");
@@ -215,7 +214,7 @@ $(document).ready(function() {
   });
   // -------------------------------------------------------------
   var askLoaderIsOpen
-  $('body').click(function(event) {
+  $(document).click(function(event) {
     var isInAskLoader = $(event.target).hasClass("ask_loader");
     var isInChildOfLoader = $(event.target).parent().hasClass("ask_loader");
     var isInGrandChildOfLoader = $(event.target).parent().parent().hasClass("ask_loader");

@@ -30,6 +30,10 @@ class UserSharesController < ApplicationController
     end
   end
 
+  def edit
+    @asks = UserShare.find(params[:id]).asks
+  end
+    
   def destroy
     @user_share = UserShare.find(params[:id])
     if @user_share.delete
