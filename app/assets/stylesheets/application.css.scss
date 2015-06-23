@@ -88,7 +88,7 @@ a.selected {
 }
 
 .stock_ticker {
-  bottom: 10%;
+  bottom: 0%;
   left: -200%;
   position: fixed;
   height: 55px;
@@ -108,6 +108,12 @@ ul {
 th {
   text-align: center;
 }
+
+.table {
+  height: 75%;
+}
+
+
 tbody .dashboard_tr {
   display:none;
 }
@@ -118,20 +124,6 @@ td {
 
 .team_loader, .bid_loader, .ask_loader span {
   cursor: pointer;
-}
-
-.row stocks_rising {
-  float: left;
-  background-color:white;
-  border:1px solid black;
-  display: none;
-  margin-top: 5%;
-  margin-left: 8%;
-  position:fixed;
-  text-align:left;
-  width: auto;
-  z-index:50;
-  padding: 25px 25px 20px;
 }
 
 .stocks_rising {
@@ -157,4 +149,54 @@ td {
   width: 220px;
   z-index:0;
   padding: 5px;
+}
+
+.outter_bid_rolodex {
+  width: 50%;
+  position: fixed;
+  bottom: 20%;
+  left: 10%;
+  height: 15%;
+}
+.bid_rolodex {
+  position: relative;
+  left: 0%;
+}
+
+.bid_rolodex_div {
+  text-align: center;
+  position: fixed;
+  left: 10%;
+  bottom: 12%;
+}
+
+.outter_bid_rolodex button{
+    position: relative;
+    left: 0%;
+    bottom: 70%;
+}
+
+.outter_ask_rolodex button{
+    position: relative;
+    right: 0%;
+    bottom: 70%;
+}
+
+.outter_ask_rolodex {
+  width: 50%px;
+  position: fixed;
+  bottom: 20%;
+  right: 10%;
+  height: 15%;
+}
+.ask_rolodex {
+  position: relative;
+  right: 0%;
+}
+
+.ask_rolodex_div {
+  text-align: center;
+  position: fixed;
+  right: 10%;
+  bottom: 12%;
 }
