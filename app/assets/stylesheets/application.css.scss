@@ -22,7 +22,7 @@
   border:1px solid black;
   display:none;
   margin-top: 5%;
-  margin-left: 32%;
+  margin-left: 31%;
   position:fixed;
   text-align:left;
   width: auto;
@@ -34,26 +34,26 @@
   background-color:white;
   border:1px solid black;
   display:none;
-  margin-top: 5%;
-  margin-left: 8%;
   position:fixed;
+  top: 10%;
+  left: 20%;
   text-align:left;
   width: auto;
   z-index:50;
-  padding: 25px 25px 20px;
+  padding: 25px 25px 25px;
 }
 
 .ask_loader {
   background-color:white;
   border:1px solid black;
   display:none;
-  margin-top: 5%;
-  margin-left: 60%;
   position:fixed;
+  top: 10%;
+  right: 20%;
   text-align:left;
   width: auto;
   z-index:50;
-  padding: 25px 25px 20px;
+  padding: 25px 25px 25px;
 }
 
 a.selected {
@@ -75,6 +75,14 @@ a.selected {
   color: red;
 }
 
+form {
+overflow: hidden;
+}
+
+form.edit_ask {
+  margin-top: 5%;
+}
+
 .header {
   height: 85px;
   border-bottom-color: black;
@@ -93,6 +101,7 @@ a.selected {
   position: fixed;
   height: 55px;
   width: 400%;
+  z-index: 0;
 }
 
 .scores {
@@ -109,8 +118,14 @@ th {
   text-align: center;
 }
 
+th
+
 .table {
   height: 75%;
+  z-index: 5;
+}
+tr {
+  z-index: 5;
 }
 
 
@@ -152,22 +167,28 @@ td {
 }
 
 .outter_bid_rolodex {
-  width: 50%;
+  width: 35%;
+  height: 20%;
   position: fixed;
-  bottom: 20%;
+  bottom: 15%;
   left: 10%;
-  height: 15%;
+  background-color: white;
+  z-index: 75;
 }
 .bid_rolodex {
   position: relative;
   left: 0%;
+  top: 0%;
+  height: auto;
+  z-index: 75;
 }
 
 .bid_rolodex_div {
   text-align: center;
   position: fixed;
   left: 10%;
-  bottom: 12%;
+  bottom: 15%;
+  z-index: 75;
 }
 
 .outter_bid_rolodex button{
@@ -178,25 +199,60 @@ td {
 
 .outter_ask_rolodex button{
     position: relative;
-    right: 0%;
-    bottom: 70%;
+    float: right;
+    bottom: 25%;
+
 }
 
 .outter_ask_rolodex {
-  width: 50%px;
+  width: 35%;
   position: fixed;
-  bottom: 20%;
+  bottom: 15%;
   right: 10%;
-  height: 15%;
+  height: 20%;
+  background-color: white;
+  z-index: 95;
 }
 .ask_rolodex {
   position: relative;
   right: 0%;
+  top: 0%;
+  height: auto;
+  z-index: 75;
 }
 
 .ask_rolodex_div {
   text-align: center;
   position: fixed;
   right: 10%;
-  bottom: 12%;
+  bottom: 25%;
+  z-index: 75;
+}
+
+.outter_trade_rolodex button{
+    position: relative;
+    z-index: 75;
+}
+
+.outter_trade_rolodex {
+  text-align: center;
+  margin-left: 29%;
+  margin-right: 29%;
+  width: 30%;
+  position: fixed;
+  bottom: 15%;
+  height: 20%;
+  z-index: 98;
+  background-color: white;
+}
+.trade_rolodex {
+  position: relative;
+  top: 0%;
+  height: auto;
+  z-index: 75;
+}
+
+.trade_rolodex_div {
+  text-align: center;
+  position: relative;
 }

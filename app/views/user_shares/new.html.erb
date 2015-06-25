@@ -26,7 +26,7 @@
 <p></p>
 
 <table class = "table" style="margin-top: 15%">
-  <caption><form><legend> Stocks Purchased & Traded For: </legend></form></caption>
+  <caption><form><legend> Stocks Purchased Traded or Bid For: </legend></form></caption>
   <thead>
     <tr>
     <th>Team</th>
@@ -38,7 +38,7 @@
   <tbody>
     <% @user_shares.each do |user_share| %>
       <tr>
-          <td><%= link_to user_share.team.name, edit_user_share_path(user_share) %></td>
+          <td><%="#{user_share.team.name}  |"%><%= link_to "  Bid & Ask Edit Page", edit_user_share_path(user_share) %></td>
           <td><%= user_share.number_of_shares %></td>
           <td><%= (user_share.number_of_shares * user_share.team.points_per_share).round(2) %></td>
           <td><%= link_to "Remove", user_share_path(user_share.id), method: :delete  %>         </td>

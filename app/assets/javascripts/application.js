@@ -13,18 +13,17 @@
 //= require bootstrap-sprockets
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require_tree .
 
 
 $(document).ready(function() {
-
+  if ( $( ".stock_ticker" ).length ) {
   function stockTicker(speed){
     var groupStart = 63
     var groupEnd = groupStart - 12
     var poistionAdjust = 0
     var poistionAdjust = 225;
-    var id = setInterval(function(){
+    id = setInterval(function(){
 
       for (var i = groupStart; i > groupEnd ; i--) {
         $('.stocks_droppping').eq(i).css({
@@ -67,7 +66,8 @@ $(document).ready(function() {
       }
     },speed);
   };
- stockTicker(5);
+  stockTicker(5);
+  }
 
   var show_all
   $(document).on("click",".see_all_button", function() {
@@ -163,7 +163,7 @@ $(document).ready(function() {
     var isInBidLoader = $(event.target).hasClass("bid_loader");
     var isInChildOfLoader = $(event.target).parent().hasClass("bid_loader");
     var isInGrandChildOfLoader = $(event.target).parent().parent().hasClass("bid_loader");
-    var isInTh = $(event.target).hasClass("bid_loader_onclick")
+    var isInTh = $(event.target).hasClass("bid_rolodex_div")
     if (isInBidLoader || isInChildOfLoader || isInGrandChildOfLoader) {
       console.log("Do Nothing")
     } else if (isInTh) {
@@ -218,7 +218,7 @@ $(document).ready(function() {
     var isInAskLoader = $(event.target).hasClass("ask_loader");
     var isInChildOfLoader = $(event.target).parent().hasClass("ask_loader");
     var isInGrandChildOfLoader = $(event.target).parent().parent().hasClass("ask_loader");
-    var isInTh = $(event.target).hasClass("ask_loader_onclick")
+    var isInTh = $(event.target).hasClass("ask_rolodex_div")
     if (isInAskLoader || isInChildOfLoader || isInGrandChildOfLoader) {
       console.log("Do Nothing")
     } else if (isInTh) {
@@ -302,10 +302,11 @@ $(document).ready(function() {
   });
 
   function createBidRolodex() {
+
     if ($('.bid_rolodex_div').length < 5) {
       var addEmptyBids = 5 - ($('.bid_rolodex_div').length);
        for (var i = 0; i < addEmptyBids; i++) {
-         $('<div class="bid_rolodex_div">-</div>').appendTo($('.bid_rolodex'));
+         $('<div class="bid_rolodex_div">------</div>').appendTo($('.bid_rolodex'));
        }
     }
 
@@ -316,70 +317,103 @@ $(document).ready(function() {
       }
     }
 
+    $('.bid_rolodex_div').eq(0).css({'font-size': '50%', 'bottom': '27.5%'});
+    $('.bid_rolodex_div').eq(1).css({'font-size': '100%', 'bottom': '23.5%'});
+    $('.bid_rolodex_div').eq(2).css({'font-size': '150%', 'bottom': '18%'});
+    $('.bid_rolodex_div').eq(3).css({'font-size': '100%', 'bottom': '14%'});
+    $('.bid_rolodex_div').eq(4).css({'font-size': '50%', 'bottom': '12%'});
+
     $('.outter_bid_rolodex button').mousedown(function() {
       function scroll() {
-        //  $('.bid_rolodex_div').eq(0).css('display', 'none');
-         $('.bid_rolodex_div').eq(0).appendTo($('.bid_rolodex'));
-         $('.bid_rolodex_div').eq(0).animate( {'font-size': '50%', 'bottom': '28%'}, 250);
-         $('.bid_rolodex_div').eq(1).animate( {'font-size': '100%', 'bottom': '24%'}, 250);
-         $('.bid_rolodex_div').eq(2).animate( {'font-size': '150%', 'bottom': '18%'}, 250);
-         $('.bid_rolodex_div').eq(3).animate( {'font-size': '100%', 'bottom': '14%'}, 250);
-         $('.bid_rolodex_div').eq(4).animate( {'font-size': '50%',  'bottom': '12%'}, 250);
-         $('.bid_rolodex_div').eq(4).css('display', 'block');
+        $('.bid_rolodex_div').eq(0).css('display', 'none');
+        $('.bid_rolodex_div').eq(0).appendTo($('.bid_rolodex'));
+        $('.bid_rolodex_div').eq(0).animate( {'font-size': '50%', 'bottom': '27.5%'}, 250);
+        $('.bid_rolodex_div').eq(1).animate( {'font-size': '100%', 'bottom': '23.5%'}, 250);
+        $('.bid_rolodex_div').eq(2).animate( {'font-size': '150%', 'bottom': '18%'}, 250);
+        $('.bid_rolodex_div').eq(3).animate( {'font-size': '100%', 'bottom': '14%'}, 250);
+        $('.bid_rolodex_div').eq(4).css('display', 'block');
+        $('.bid_rolodex_div').eq(4).animate( {'font-size': '50%',  'bottom': '12%'}, 250);
       }
       scroll();
     });
-
-    $('.bid_rolodex_div').eq(0).css({'font-size': '50%', 'bottom': '28%'});
-    $('.bid_rolodex_div').eq(1).css({'font-size': '100%', 'bottom': '24%'});
-    $('.bid_rolodex_div').eq(2).css({'font-size': '150%', 'bottom': '18%'});
-    $('.bid_rolodex_div').eq(3).css({'font-size': '100%', 'bottom': '14%'});
-    $('.bid_rolodex_div').eq(4).css('display', 'block');
-    $('.bid_rolodex_div').eq(4).css({'font-size': '50%', 'bottom': '12%'}  );
-
   }
-
   createBidRolodex();
 
   function createAskRolodex() {
+
     if ($('.ask_rolodex_div').length < 5) {
       var addEmptyAsks = 5 - ($('.ask_rolodex_div').length);
        for (var i = 0; i < addEmptyAsks; i++) {
-         $('<div class="ask_rolodex_div">-</div>').appendTo($('.ask_rolodex'));
+         $('<div class="ask_rolodex_div">------</div>').appendTo($('.ask_rolodex'));
        }
     }
 
     if ($('.ask_rolodex_div').length > 5) {
       var removeAsks = ($('.ask_rolodex_div').length) - 5;
-      for (var i = 5; i < removeAsks+5; i++) {
+      console.log(removeAsks);
+      for (var i = 5; i <= removeAsks+5; i++) {
+        console.log(  $('.ask_rolodex_div').eq(i));
         $('.ask_rolodex_div').eq(i).css('display', 'none');
       }
     }
 
+    $('.ask_rolodex_div').eq(0).css({'font-size': '50%', 'bottom': '27.5%'});
+    $('.ask_rolodex_div').eq(1).css({'font-size': '100%', 'bottom': '23.5%'});
+    $('.ask_rolodex_div').eq(2).css({'font-size': '150%', 'bottom': '18%'});
+    $('.ask_rolodex_div').eq(3).css({'font-size': '100%', 'bottom': '14%'});
+    $('.ask_rolodex_div').eq(4).css({'font-size': '50%', 'bottom': '12%'});
+
     $('.outter_ask_rolodex button').mousedown(function() {
       function scroll() {
-        //  $('.bid_rolodex_div').eq(0).css('display', 'none');
-         $('.ask_rolodex_div').eq(0).appendTo($('.ask_rolodex'));
-         $('.ask_rolodex_div').eq(0).animate( {'font-size': '50%', 'bottom': '28%'}, 250);
-         $('.ask_rolodex_div').eq(1).animate( {'font-size': '100%', 'bottom': '24%'}, 250);
-         $('.ask_rolodex_div').eq(2).animate( {'font-size': '150%', 'bottom': '18%'}, 250);
-         $('.ask_rolodex_div').eq(3).animate( {'font-size': '100%', 'bottom': '14%'}, 250);
-         $('.ask_rolodex_div').eq(4).animate( {'font-size': '50%', 'bottom': '12%'}, 250);
-         $('.ask_rolodex_div').eq(4).css('display', 'block');
+        $('.ask_rolodex_div').eq(0).css('display', 'none');
+        $('.ask_rolodex_div').eq(0).appendTo($('.ask_rolodex'));
+        $('.ask_rolodex_div').eq(0).animate( {'font-size': '50%', 'bottom': '27.5%'}, 250);
+        $('.ask_rolodex_div').eq(1).animate( {'font-size': '100%', 'bottom': '23.5%'}, 250);
+        $('.ask_rolodex_div').eq(2).animate( {'font-size': '150%', 'bottom': '18%'}, 250);
+        $('.ask_rolodex_div').eq(3).animate( {'font-size': '100%', 'bottom': '14%'}, 250);
+        $('.ask_rolodex_div').eq(4).css('display', 'block');
+        $('.ask_rolodex_div').eq(4).animate( {'font-size': '50%', 'bottom': '12%'}, 250);
       }
       scroll();
     });
-
-    $('.ask_rolodex_div').eq(0).css({'font-size': '50%', 'bottom': '28%'});
-    $('.ask_rolodex_div').eq(1).css({'font-size': '100%', 'bottom': '24%'});
-    $('.ask_rolodex_div').eq(2).css({'font-size': '150%', 'bottom': '18%'});
-    $('.ask_rolodex_div').eq(3).css({'font-size': '100%', 'bottom': '14%'});
-    $('.ask_rolodex_div').eq(4).css('display', 'block');
-    $('.ask_rolodex_div').eq(4).css({'font-size': '50%', 'bottom': '12%'});
-
   }
-
   createAskRolodex();
 
+  function createTradeRolodex() {
+    if ($('.trade_rolodex_div').length < 5 ) {
+      var addEmptyTrades = 5 - ($('.trade_rolodex_div').length);
+       for (var i = 0; i < addEmptyTrades; i++) {
+         $('<div class="trade_rolodex_div">------</div>').appendTo($('.trade_rolodex'));
+       }
+    }
 
+    if ($('.trade_rolodex_div').length > 5) {
+      var removeTrades = ($('.trade_rolodex_div').length) - 5;
+      for (var i = 5; i < removeTrades+5; i++) {
+        $('.trade_rolodex_div').eq(i).css('display', 'none');
+      }
+    }
+
+    $('.trade_rolodex_div').eq(0).css({'font-size': '50%'});
+    $('.trade_rolodex_div').eq(1).css({'font-size': '100%'});
+    $('.trade_rolodex_div').eq(2).css({'font-size': '150%'});
+    $('.trade_rolodex_div').eq(3).css({'font-size': '100%'});
+    $('.trade_rolodex_div').eq(4).css({'font-size': '50%'});
+
+    $('.outter_trade_rolodex button').mousedown(function() {
+      console.log("button")
+      function scroll() {
+        $('.trade_rolodex_div').eq(0).css('display', 'none');
+        $('.trade_rolodex_div').eq(0).appendTo($('.trade_rolodex'));
+        $('.trade_rolodex_div').eq(0).animate( {'font-size': '50%'}, 250);
+        $('.trade_rolodex_div').eq(1).animate( {'font-size': '100%'}, 250);
+        $('.trade_rolodex_div').eq(2).animate( {'font-size': '150%'}, 250);
+        $('.trade_rolodex_div').eq(3).animate( {'font-size': '100%'}, 250);
+        $('.trade_rolodex_div').eq(4).animate( {'font-size': '50%'}, 250);
+        $('.trade_rolodex_div').eq(4).css('display', 'block');
+      }
+      scroll();
+    })
+  }
+  createTradeRolodex();
 });

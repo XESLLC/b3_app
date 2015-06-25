@@ -51,6 +51,7 @@
     </form>
   </div>
 
+
   <table class = "table">
     <thead>
       <tr>
@@ -61,21 +62,22 @@
         <th class= "col-md-1 ask_loader_onclick">Your Ask</th>
       </tr>
     </thead>
-    <tbody>
-      <% @bid_ask.each_pair do |team_id, team_data| %>
-        <tr class = "dashboard_tr">
-          <td class= "bid_data"><%= "#{team_data[:user_bids].join(" , ")}" %></td>
-          <td><%= number_with_precision(team_data[:bid_points], precision: 2) %></td>
-          <td>
-            <span><%= "#{team_data[:seed]} | " %></span>
-            <span class="team_data"><%= "#{team_data[:name]}" %></span>
-          </td>
-          <td><%= number_with_precision(team_data[:ask_points], precision: 2) %></td>
-         <td class= "ask_data"><%= "#{team_data[:user_asks].join(" , ")}" %></td>
-        </tr>
-      <% end %>
-    </tbody>
+      <tbody>
+        <% @bid_ask.each_pair do |team_id, team_data| %>
+          <tr class = "dashboard_tr">
+            <td class= "bid_data"><%= "#{team_data[:user_bids].join(" , ")}" %></td>
+            <td><%= number_with_precision(team_data[:bid_points], precision: 2) %></td>
+            <td>
+              <span><%= "#{team_data[:seed]} | " %></span>
+              <span class="team_data"><%= "#{team_data[:name]}" %></span>
+            </td>
+            <td><%= number_with_precision(team_data[:ask_points], precision: 2) %></td>
+           <td class= "ask_data"><%= "#{team_data[:user_asks].join(" , ")}" %></td>
+          </tr>
+        <% end %>
+      </tbody>
   </table>
+<div class="row">
 
   <div class="outter_bid_rolodex">
       <button type="button" class="glyphicon glyphicon-arrow-up" aria-hidden="true" ></button>
@@ -86,6 +88,29 @@
           <div class="bid_rolodex_div">
             <%= "#{bid.shares} | #{share.team.name} | $#{bid.points} " %>
           </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="outter_trade_rolodex">
+      <button type="button" class="glyphicon glyphicon-arrow-up" aria-hidden="true" ></button>
+      <p></p>
+    <div class="trade_rolodex">
+      <% @user_shares.each do |share| %>
+        <% share.asks.each do |ask| %>
+          <% if ask.trade != nil %>
+            <div class="trade_rolodex_div">
+              <%= "#{ask.shares} | #{share.team.name} | $#{ask.trade.points} " %>
+            </div>
+          <% end %>
+        <% end %>
+        <% share.bids.each do |bid| %>
+          <% if bid.trade != nil %>
+            <div class="trade_rolodex_div">
+              <%= "#{bid.shares} | #{share.team.name} | $#{bid.trade.points} " %>
+            </div>
+          <% end %>
         <% end %>
       <% end %>
     </div>
@@ -104,31 +129,7 @@
       <% end %>
     </div>
   </div>
-
-  <!-- <div class="scores">
-    <% if current_user %>
-      <div class="bid_create">
-      </div>
-
-      <div class="">
-        Executed Trades
-        <% @user_trades.each do |trade| %>
-        <%= "#{trade.bid.user_share.team.name} #{trade.points}" %>
-        <% end %>
-      </div>
-
-      <div class="">
-        Total Points
-        <%= @total_points %>
-        Current Points
-        <%= @current_points %>
-      </div>
-      <% else %>
-        <div class="">
-          Please Sign In
-        </div>
-      <% end %>
-  </div> -->
+</div>
 
   <div class="stock_ticker">
     <% @team_points_hash.each_pair do |team, team_trade_data| %>

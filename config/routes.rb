@@ -13,5 +13,6 @@ Rails.application.routes.draw do
   resources :users
   resources :user_shares
   resources :ask
+  resources :bid
 
 end

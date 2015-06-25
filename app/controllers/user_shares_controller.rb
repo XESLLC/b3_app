@@ -32,8 +32,9 @@ class UserSharesController < ApplicationController
 
   def edit
     @asks = UserShare.find(params[:id]).asks
+    @bids = UserShare.find(params[:id]).bids
   end
-    
+
   def destroy
     @user_share = UserShare.find(params[:id])
     if @user_share.delete
@@ -47,51 +48,16 @@ class UserSharesController < ApplicationController
 
   def create_bid
     team = Team.find_by_name(params[:team_name])
-    @user_share = current_user.user_shares.where(team_id: team.id).first if current_user.user_shares.where(team_id: team.id)
+    @user_share = current_user.user_shares.where(team_id: team.id).first
     if @user_share && @user_share != []
       @bid = Bid.create!(user_share_id: @user_share.id, shares: bid_params[:bid_shares], points: bid_params[:bid_points_share])
     else
       @user_share = UserShare.create!(user_id: current_user.id, team_id: team.id, number_of_shares: 0)
       @bid = Bid.create!(user_share_id: @user_share.id, shares: bid_params[:bid_shares], points: bid_params[:bid_points_share])
     end
-
-    @asks = Team.find(team[:id]).asks.order(points: :asc)
-    @asks.each do |ask|
-      if @bid.points >= ask.points
-
-        if @bid.shares > ask.shares
-          reduce_bid_remove_ask = @bid.shares - ask.shares
-          @trade = Trade.create!(bid_id: @bid.id, ask_id: ask.id, points: ask.points*ask.shares)
-          current_user.update!(points_to_spend: current_user.points_to_spend - @trade.points, points_spent: current_user.points_spent + @trade.points)
-          ask.user_share.update!(number_of_shares: ask.user_share.number_of_shares - ask.shares)
-          @bid.update!(shares: reduce_bid_remove_ask)
-          ask.destroy
-        elsif @bid.shares < ask.shares
-          reduce_ask_remove_bid = ask.shares - @bid.shares
-          @trade = Trade.create!(bid_id: @bid.id, ask_id: ask.id, points: ask.points*@bid.shares)
-          current_user.update!(points_to_spend: current_user.points_to_spend - @trade.points, points_spent: current_user.points_spent + @trade.points)
-          @user_share.update!(number_of_shares: @user_share.number_of_shares + @bid.shares)
-          ask.user_share.update!(number_of_shares: ask.user_share.number_of_shares - @bid.shares)
-          ask.update!(shares: reduce_ask_remove_bid)
-          @bid.destroy
-        elsif @bid.shares = ask.shares
-          @trade = Trade.create(bid_id: @bid.id, ask_id: ask.id, points: ask.points*ask.shares)
-          current_user.update!(points_to_spend: current_user.points_to_spend - @trade.points, points_spent: current_user.points_spent + @trade.points)
-          ask.user_share.user.update!(points_to_spend: current_user.points_to_spend + @trade.points, points_spent: current_user.points_spent - @trade.points)
-          @user_share.update!(number_of_shares: @user_share.number_of_shares + ask.shares)
-          ask.user_share.update!(number_of_shares: ask.user_share.number_of_shares - ask.shares)
-          @bid.destroy
-          ask.destroy
-        end
-
-      end
-    end
-
-    if @bid
-      respond_to do |format|
-        format.json { render json: {team: team, bid: @bid, trade: @trade} }
-      end
-    end
+    respond_to do |format|
+    format.json { render json: {team: team, ask: @ask }}
+  end
 
   end
 
@@ -102,33 +68,8 @@ class UserSharesController < ApplicationController
     if user_share && user_share != []
       @ask = Ask.create!(user_share_id: user_share.first.id, shares: ask_params[:ask_shares], points: ask_params[:ask_points_share])
     end
-
-    @bids = Team.find(team[:id]).bids.order(points: :asc)
-    @bids.each do |bid|
-
-      if bid.points >= bid.points
-        if bid.shares > @ask.shares
-          reduce_bid_remove_ask = bid.shares - @ask.shares
-          @trade = Trade.create!(bid_id: bid.id, ask_id: @ask.id, points: @ask.points*@ask.shares)
-          bid.update!(shares: reduce_bid_remove_ask)
-          @ask.destroy
-        elsif bid.shares < @ask.shares
-          reduce_bid_remove_ask = @ask.shares - bid.shares
-          @trade = Trade.create!(bid_id: bid.id, ask_id: @ask.id, points: @ask.points*bid.shares)
-          @ask.update!(shares: reduce_bid_remove_ask )
-          bid.destroy
-        elsif bid.shares = @ask.shares
-          @trade = Trade.create(bid_id: bid.id, ask_id: @ask.id, points: @ask.points*@ask.shares)
-          bid.destroy
-          @ask.destroy
-        end
-      end
-    end
-
-    if @ask
-      respond_to do |format|
-        format.json { render json: {team: team, ask: @ask }}
-      end
+    respond_to do |format|
+      format.json { render json: {team: team, ask: @ask }}
     end
   end
 
