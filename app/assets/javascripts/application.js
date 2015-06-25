@@ -13,81 +13,16 @@
 //= require bootstrap-sprockets
 //= require jquery
 //= require jquery_ujs
-//= require_tree .
+//= require_tree.
 
 
 $(document).ready(function() {
-  if ( $( ".stock_ticker" ).length ) {
-  function stockTicker(speed){
-    var groupStart = 63
-    var groupEnd = groupStart - 12
-    var poistionAdjust = 0
-    var poistionAdjust = 225;
-    id = setInterval(function(){
+  console.log(sessionStorage.team_picks);
+  console.log(team_picks);
 
-      for (var i = groupStart; i > groupEnd ; i--) {
-        $('.stocks_droppping').eq(i).css({
-          display: 'inline-block',
-          color: 'red'
-        });
+  var team_picks
+  sessionStorage.team_picks == undefined ? team_picks = [] : team_picks = $.parseJSON(sessionStorage.team_picks);
 
-        var newPosition = parseInt($('.stocks_droppping').eq(groupStart).css('left').slice(0,-2))+ 2;
-
-        if (newPosition < 2750) {
-          $('.stocks_droppping').eq(i).css({
-            left: newPosition,
-          })
-        } else {
-          $('.stocks_droppping').eq(i).css({
-            left: newPosition - poistionAdjust,
-          })
-          $('.stocks_droppping').eq(groupStart).css({
-              display: 'none',
-              color: 'black'
-          });
-          groupStart -= 1;
-          groupEnd -= 1;
-          if (groupEnd == -2) {
-            groupStart = 63;
-            groupEnd = groupStart - 6;
-            clearInterval(id);
-            setTimeout(function() {
-              for (var i = 0; i < 63; i++) {
-                $('.stocks_droppping').eq(i).css({
-                    display: 'none',
-                    color: 'black',
-                    left: '-1000px'
-                });
-              }
-              stockTicker(10);
-            }, 3000);
-          }
-        }
-      }
-    },speed);
-  };
-  stockTicker(5);
-  }
-
-  var show_all
-  $(document).on("click",".see_all_button", function() {
-    show_all = show_all ? false : true
-    $(".team_data").each(function(row) {
-      var that = this
-      team_picks.forEach(function(team){
-        if (show_all) {
-          $(".see_all_button").css("background-color", "yellow");
-          $(that).closest('.dashboard_tr').css('display', 'table-row');
-        }
-        if (!show_all) {
-          $(".see_all_button").css("background-color", "white");
-          $(that).closest('.dashboard_tr').css('display', 'none');
-        }
-      });
-    });
-  });
-
-  var team_picks = $.parseJSON(sessionStorage.team_picks || '[]');
   if (team_picks == [] || team_picks == "") {
     $.ajax({
         type: "GET",
@@ -97,15 +32,15 @@ $(document).ready(function() {
           console.log(error);
         },
         success: function(team_picks) {
+          if (team_picks == [] || team_picks == "") {
+            team_picks = ["empty"];
+          } else {
           sessionStorage.team_picks = JSON.stringify(team_picks);
           location.reload();
+          }
         }
     });
   };
-
-  $(document).on("click",".dashboard", function() {
-    setTimeout(function(){location.reload();},2000);
-  });
 
   $(".team_data").each(function(row) {
     var that = this
@@ -115,6 +50,139 @@ $(document).ready(function() {
         $(that).css('cursor','pointer');
       }
     });
+  });
+
+  var store_team_picks = function(e) {
+    $.ajax({
+        type: "POST",
+        url: "dashboard/pick_teams",
+        data: {"last_session": sessionStorage.team_picks},
+        error: function(error){
+          console.log(error);
+        },
+        success: function() {
+          console.log("session sent to user controller");
+        }
+      });
+    e.preventDefault();
+    team_picks = [];
+    sessionStorage.team_picks = JSON.stringify(team_picks);
+  };
+
+  var timeoutId = 0;
+  $('tbody .dashboard_tr').mousedown(function() {
+    var that = $(this).find('.team_data');
+    function hideTeam() {
+      var new_team_picks = team_picks.filter(function(elem){
+        return elem !== (that).text();
+      });
+      if (team_picks != new_team_picks) store_team_picks;
+      team_picks = new_team_picks;
+      sessionStorage.team_picks = JSON.stringify(team_picks);
+      $(that).closest('.dashboard_tr').css('display', 'none');
+    }
+      timeoutId = setTimeout(hideTeam, 2000);
+  }).bind('mouseup mouseleave', function() {
+    clearTimeout(timeoutId);
+  });
+
+  $(document).on("click",".sign_out", function(e) {
+    $.ajax({
+        type: "POST",
+        url: "dashboard/pick_teams",
+        data: {"last_session": sessionStorage.team_picks},
+        error: function(error){
+          console.log(error);
+        },
+        success: function() {
+          console.log("session sent to user controller");
+        }
+      });
+    e.preventDefault();
+    team_picks = [];
+    sessionStorage.team_picks = JSON.stringify(team_picks);
+  });
+
+  if ( $( ".stock_ticker" ).length ) {
+    function stockTicker(speed){
+      var groupStart = 63
+      var groupEnd = groupStart - 12
+      var poistionAdjust = 225;
+      var newPosition
+      for (var i = 0; i <= 63; i++) {
+        $('.stocks_droppping').eq(i).css({
+            display: 'none',
+            color: 'red',
+            left: '-500px'
+        });
+      }
+      id = setInterval(function(){
+
+        for (var i = groupStart; i > groupEnd ; i--) {
+          $('.stocks_droppping').eq(i).css({
+            display: 'inline-block',
+            color: 'red'
+          });
+
+          newPosition = parseInt($('.stocks_droppping').eq(groupStart).css('left').slice(0,-2))+ 2;
+
+          if (newPosition < 2750) {
+            $('.stocks_droppping').eq(i).css({
+              left: newPosition,
+            });
+          } else {
+            $('.stocks_droppping').eq(i).css({
+              left: newPosition - poistionAdjust,
+            });
+            $('.stocks_droppping').eq(groupStart).css({
+                display: 'none',
+                color: 'black'
+            });
+            groupStart -= 1;
+            groupEnd -= 1;
+            if (groupEnd == -2) {
+              groupStart = 63;
+              groupEnd = groupStart - 6;
+              clearInterval(id);
+              setTimeout(function() {
+                for (var i = 0; i < 63; i++) {
+                  $('.stocks_droppping').eq(i).css({
+                      display: 'none',
+                      color: 'black',
+                      left: '-500px'
+                  });
+                }
+                stockTicker(10);
+              }, 3000);
+            }
+          }
+        }
+      },speed);
+    };
+    stockTicker(5);
+  }
+
+  var show_all
+  $(document).on("click",".see_all_button", function() {
+    show_all = show_all ? false : true
+    $(".team_data").each(function(row) {
+      var that = this
+      // team_picks.forEach(function(team){
+        if (show_all) {
+          $(".see_all_button").css("background-color", "yellow");
+          $(that).closest('.dashboard_tr').css('display', 'table-row');
+        }
+        if (!show_all) {
+          $(".see_all_button").css("background-color", "white");
+          $(that).closest('.dashboard_tr').css('display', 'none');
+        }
+      // });
+    });
+  });
+
+
+  $(document).on("click",".dashboard", function() {
+    setTimeout(function(){location.reload();},2000);
   });
 
   $("thead tr th").hover(function() {
@@ -146,7 +214,7 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on("click",".team_loader span", function() {
+  $(document).on("click",".team_loader span.add_team", function() {
     if (team_picks == undefined || null) team_picks = [];
     $(".team_data").each(function(row) {
       if ($(this).text() === $(".team_loader select").val()) {
@@ -209,8 +277,8 @@ $(document).ready(function() {
           }
         });
       e.preventDefault();
-      session_team_picks = [];
-      sessionStorage.team_picks = [];
+      team_picks = [];
+      sessionStorage.team_picks = JSON.stringify(team_picks);
   });
   // -------------------------------------------------------------
   var askLoaderIsOpen
@@ -265,41 +333,10 @@ $(document).ready(function() {
           }
         });
       e.preventDefault();
-      session_team_picks = [];
-      sessionStorage.team_picks = [];
+      team_picks = [];
+      sessionStorage.team_picks = JSON.stringify(team_picks);
   });
   // -------------------------------------------------------------
-  var timeoutId = 0;
-  $('tbody .dashboard_tr').mousedown(function() {
-    var that = $(this).find('.team_data');
-    function hideTeam(){
-      var new_team_picks = team_picks.filter(function(elem){
-        return elem !== (that).text();
-      });
-      team_picks = new_team_picks
-      sessionStorage.team_picks = JSON.stringify(team_picks);
-      $(that).closest('.dashboard_tr').css('display', 'none');
-    }
-      timeoutId = setTimeout(hideTeam, 2000);
-  }).bind('mouseup mouseleave', function() {
-    clearTimeout(timeoutId);
-  });
-
-  $(document).on("click",".sign_out", function(e) {
-    $.ajax({
-        type: "POST",
-        url: "dashboard/pick_teams",
-        data: {"last_session": sessionStorage.team_picks},
-        error: function(error){
-        },
-        success: function() {
-          console.log("session sent to user controller");
-        }
-      });
-    e.preventDefault();
-    session_team_picks = [];
-    sessionStorage.team_picks = [];
-  });
 
   function createBidRolodex() {
 
@@ -350,9 +387,7 @@ $(document).ready(function() {
 
     if ($('.ask_rolodex_div').length > 5) {
       var removeAsks = ($('.ask_rolodex_div').length) - 5;
-      console.log(removeAsks);
       for (var i = 5; i <= removeAsks+5; i++) {
-        console.log(  $('.ask_rolodex_div').eq(i));
         $('.ask_rolodex_div').eq(i).css('display', 'none');
       }
     }
@@ -401,7 +436,6 @@ $(document).ready(function() {
     $('.trade_rolodex_div').eq(4).css({'font-size': '50%'});
 
     $('.outter_trade_rolodex button').mousedown(function() {
-      console.log("button")
       function scroll() {
         $('.trade_rolodex_div').eq(0).css('display', 'none');
         $('.trade_rolodex_div').eq(0).appendTo($('.trade_rolodex'));
@@ -413,7 +447,7 @@ $(document).ready(function() {
         $('.trade_rolodex_div').eq(4).css('display', 'block');
       }
       scroll();
-    })
+    });
   }
   createTradeRolodex();
 });

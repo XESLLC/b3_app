@@ -30,24 +30,23 @@ before_action :is_signed_in_or_guest
           @bid_ask[team.id][:user_asks] << user_asks if user_asks != []
         end
     end
+
     @team_points_hash = {}
     @teams.reverse.each do |team|
-      ask_points = []
-      team.asks.each do |ask|
-        ask_points << ask.trade.points if ask.trade
-      end
       bid_points = []
-      trade_points = [0]
+      trade_points = []
       team.bids.each do |bid|
         bid_points << bid.points
         trade_points << bid.trade.points if bid.trade
       end
-      if ask_points == [] || bid_points == []
-        team_points = 0.0
+      if trade_points != []
+        team_points = bid_points.concat(trade_points).sort.sort.last
+      elsif trade_points = [] && bid_points != []
+        team_points = bid_points.sort.last
       else
-        team_points = ((ask_points.sort.first - bid_points.sort.last)/2) + bid_points.sort.last
+        team_points = 0
       end
-      @team_points_hash[:"#{team.name}"] = [team_points, team_points > trade_points.last ]
+      @team_points_hash[:"#{team.name}"] = team_points
     end
 
     if current_user
@@ -71,12 +70,15 @@ before_action :is_signed_in_or_guest
   def pick_teams
     @user = User.find(current_user.id)
     if @user.update(last_session: params[:last_session])
-      redirect_to root_path
+      respond_to do |format|
+        format.json { render json: @user.last_session}
+      end
     else
       respond_to do |format|
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :unprocessable_entity}
       end
     end
+
   end
 
   def reload_pick_teams
@@ -86,7 +88,9 @@ before_action :is_signed_in_or_guest
         format.json { render json: @user.last_session }
       end
     else
-      redirect_to root_path
+      respond_to do |format|
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
     end
   end
 

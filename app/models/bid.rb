@@ -9,7 +9,7 @@ class Bid < ActiveRecord::Base
   validates :shares, presence: true, :numericality => { :greater_than_or_equal_to => 0 }
   validates :points, presence: true, :numericality => { :greater_than_or_equal_to => 0 }
 
-  def after_save
+  def check_for_trade
     if self.shares == 0
       self.destroy
     end
