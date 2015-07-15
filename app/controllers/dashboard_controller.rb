@@ -75,7 +75,7 @@ before_action :is_signed_in_or_guest
       end
     else
       respond_to do |format|
-        format.json { render json: @user.errors, status: :unprocessable_entity}
+        format.json { render json: ["Bad pick_teams"]}
       end
     end
 
@@ -89,7 +89,7 @@ before_action :is_signed_in_or_guest
       end
     else
       respond_to do |format|
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: ["empty"] }
       end
     end
   end

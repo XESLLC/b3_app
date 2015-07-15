@@ -158,7 +158,7 @@ td {
   background-color:white;
   display: none;
   bottom: 5%;
-  left: -1000 px;
+  left: -1500 px;
   position: relative;
   text-align:center;
   width: 220px;
@@ -236,7 +236,7 @@ td {
 
 .outter_trade_rolodex {
   text-align: center;
-  margin-left: 29%;
+  margin-left: 26%;
   margin-right: 29%;
   width: 30%;
   position: fixed;
@@ -246,6 +246,7 @@ td {
   background-color: white;
 }
 .trade_rolodex {
+  margin-top: 25px;
   position: relative;
   top: 0%;
   height: auto;

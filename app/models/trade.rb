@@ -13,13 +13,11 @@ class Trade < ActiveRecord::Base
     bid_user_share.user.update(points_to_spend: this.points_to_spend - record.points,  points_spent: this.points.spent + record.points)
     ask_user_share.user.update(points_to_spend: this.points_to_spend + record.points)
     if record.bid.shares < record.ask.shares
-      binding.pry
       ask_user_share.update(number_of_shares: this.number_of_shares - record.bid.shares)
       record.ask.update(shares: this.shares - record.bid.shares)
       bid_user_share.update(number_of_shares: this.number_of_shares + record.bid.shares)
       record.bid.destroy
     elsif record.bid.shares > record.ask.shares
-      binding.pry
       ask_user_share.update!(number_of_sharesnumber_of_shares: this.number_of_shares + record.ask.shares)
       record.ask.destroy
       bid_user_share.update(number_of_shares: this.number_of_shares + record.ask.shares)

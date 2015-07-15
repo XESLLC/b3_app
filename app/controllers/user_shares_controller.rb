@@ -56,22 +56,38 @@ class UserSharesController < ApplicationController
       @bid = Bid.create!(user_share_id: @user_share.id, shares: bid_params[:bid_shares], points: bid_params[:bid_points_share])
     end
     respond_to do |format|
-    format.json { render json: {team: team, ask: @ask }}
-  end
-
-  end
-
-  def create_ask
-    team = Team.find_by_name(params[:team_name])
-    user_share = current_user.user_shares.where(team_id: team.id) if current_user.user_shares.where(team_id: team.id)
-
-    if user_share && user_share != []
-      @ask = Ask.create!(user_share_id: user_share.first.id, shares: ask_params[:ask_shares], points: ask_params[:ask_points_share])
+    format.json { render json: {team: team, bid: @bid }}
     end
-    respond_to do |format|
-      format.json { render json: {team: team, ask: @ask }}
-    end
+
   end
+
+  # def create_ask
+  #   team = Team.find(params[:id])
+  #   user_share = team.user_shares.where(user_id: current_user.id).first
+  #   @ask = user_share.asks.where(points: points)
+  #   @user_share = @ask.user_share
+  #   same_as_other_ask = UserShare.find(@user_share.id).asks.where(points: ask_params[:points]).length > 0
+  #   if @ask.points != ask_params[:points] && @ask.shares >= ask_params[:shares].to_i && same_as_other_ask
+  #     @ask.update(shares: @ask.shares - ask_params[:shares].to_i)
+  #     @ask_add_shares = UserShare.find(@user_share.id).asks.where(points: ask_params[:points])[0]
+  #     @ask_add_shares.update(shares: @ask_add_shares[:shares] + ask_params[:shares].to_i)
+  #     flash[:notice] = "You combined shares!"
+  #     redirect_to edit_user_share_path(@ask.user_share)
+  #   elsif  @ask.shares != ask_params[:shares].to_i && @ask.points != ask_params[:points] && @ask.shares > ask_params[:shares].to_i
+  #     @ask.update(shares: @ask.shares - ask_params[:shares].to_i,)
+  #     new_ask = Ask.new(ask_params.merge(user_share_id: @user_share.id))
+  #     new_ask.save
+  #     flash[:notice] = "You split shares!"
+  #     redirect_to edit_user_share_path(@ask.user_share)
+  #   elsif @ask.shares == ask_params[:shares].to_i &&  @ask.points != ask_params[:points]
+  #     @ask.update(points: ask_params[:points])
+  #     flash[:notice] = "You changed ask points!"
+  #     redirect_to edit_user_share_path(@ask.user_share)
+  #   elsif @ask.shares < bid_params[:shares].to_i
+  #     flash[:notice] = "Error - Too Many Shares"
+  #     redirect_to edit_user_share_path(@bid.user_share)
+  #   end
+  # end
 
   private
   def user_shares_params
@@ -83,7 +99,7 @@ class UserSharesController < ApplicationController
   end
 
   def ask_params
-    params.permit(:team_name, :ask_shares, :ask_points_share)
+    params.require(:ask).permit(:team_id, :team_name, :ask_shares, :ask_points_share)
   end
 
 end

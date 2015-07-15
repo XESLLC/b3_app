@@ -1,6 +1,6 @@
   <h3 style = "text-align: center">
     <% if current_user %>
-      <%= "Trading Board for #{current_user.first_name} #{current_user.last_name}"  %>
+      <div class="is_current_user">  <%= "Trading Board for #{current_user.first_name} #{current_user.last_name}" %></div>
     <% else %>
       Please <%=link_to "Sign In", new_auth_path %> to see your dashboard
     <% end %>
@@ -36,8 +36,7 @@
 
   <div class="ask_loader">
     <form>
-      <%= label_tag :team, "Team" %>
-      <%= collection_select(:team, :team_name, @user_teams, :name, :name, {}, :class=> "form-control ask_team_select" ) %>
+      <span class="form-control team_name" style="text-align: center">Team</span>
       <p></p>
       <%= label_tag :ask_shares, "Number of Shares" %>
       <%= number_field_tag :ask_shares, value = nil, :class=>"form-control ask_share_field", :placeholder=>"Number of Shares"  %>
@@ -45,12 +44,11 @@
       <%= label_tag :new_ask_points, "Ask Points" %>
       <%= number_field_tag :new_ask_points, value = nil, :class=>"form-control ask_field", :placeholder=>"Points per Share"  %>
       <p></p>
-      <span class="form-control" style="text-align: center">Create New Ask</span>
+      <span class="form-control" style="text-align: center">Create | Edit Ask</span>
       <p></p>
       <span class="form-control see_all_button" style="text-align: center"> See All </span>
     </form>
   </div>
-
 
   <table class = "table">
     <thead>
@@ -121,7 +119,7 @@
     <div class="ask_rolodex">
       <% @user_shares.each do |share| %>
         <% share.asks.each do |ask| %>
-          <div class="ask_rolodex_div">
+          <div class="ask_rolodex_div" data-ask-id="<%=ask.id%>" data-ask-shares="<%=ask.shares%>" data-ask-points="<%=ask.points%>" >
             <%= "#{ask.shares} | #{share.team.name} | $#{ask.points} " %>
           </div>
         <% end %>

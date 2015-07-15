@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get 'dashboard/reload_pick_teams' => 'dashboard#reload_pick_teams'
   post 'dashboard/pick_teams' => 'dashboard#pick_teams'
   post 'user_shares/create_bid' => 'user_shares#create_bid'
-  post 'user_shares/create_ask' => 'user_shares#create_ask'
+  post 'ask/update_js' => 'ask#update_js'
 
   resources :users
   resources :user_shares
